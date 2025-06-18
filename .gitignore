@@ -6,3 +6,4 @@ venv/
 
 --pycache--/
 *.pyc
+git remot -vgit pull origin 

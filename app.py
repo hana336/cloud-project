@@ -11,8 +11,7 @@ import sys
 import re
 import fitz
 import requests
-from docx import Document
-
+from google.cloud import storage
 
 
 
@@ -131,6 +130,17 @@ def highlight_text_in_docx(docx_path, keyword, output_folder="static/highlighted
                     run.font.highlight_color = WD_COLOR_INDEX.YELLOW
     doc.save(output_path)
     return output_path
+
+
+#رفع الملف الى google cloud storage
+def upload_file_to_bucket(file_path, bucket_name, destination_name):
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_name)
+    blob.upload_from_filename(file_path)
+    print(f"تم رفع {file_path} الى {bucket_name}/ {destination_name}")
+    
+
 
 @app.route('/', methods=["GET", "POST"])
 def home():
