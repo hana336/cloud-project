@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Document statistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; }
+        .stat-card { 
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1,h3 { color: #2c3e50;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+
+        # عرض الاحصائيات في الواجهة 
+        {% if stats %}
+        <h1 class="text-center mb-4"><i class="fas fa-chart-pie"></i>Document statistics</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <h3><i class="fas fa-info-circle"></i>General information</h3>
+                    <p><strong>Total Files:</strong>{{ "{:,}".format(stats.total_files) }}</p>
+                    <p><strong>Total size:</strong>{{ stats.total_size }}</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <h3><i class="fas fa-tags"></i>Classification Distribution</h3>
+                    {% if stats.categories %}
+                    <ul class="list-group">
+                        {% for category, count in stats.categories.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ category }}
+                            <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="alert alert-info">No classifications found</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center">
+            <h4><i class="fas fa-exclamation-triangle"></i>No statistics Available</h4>
+            <p>Please upload or process some files first</p>
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('home') }}" class="btn btn-primary">
+                <i class="fas fa-home"></i>Back to Home
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
